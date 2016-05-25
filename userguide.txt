@@ -1,0 +1,106 @@
+QUICK START
+
+This guide should show new users how to get this software up and running under typical use case scenarios:
+
+HOW TO USE THE PROGRAM AS A CONTROL CHANNEL
+
+1) Generate a key pair for the client and the listner/server
+	The following command will generate a new key pair:
+	"key new"
+	The following command will display that key pair:
+	"key view"
+
+2) Define the "public" key for the other end node with the following command:
+	"key client <the other end node's public key goes here>"
+
+3) Specify a send and receive modes with the "send" and "receive" commands. ICMP
+ping is the default, but TCP mode is also available:
+	"send icmp" sets the send mode to use ICMP ping
+	"send tcp 80" tells the host to send false data to TCP port 80 on the other end
+	"receive icmp" sets the receive mode to use ICMP ping
+	"receive tcp 80" recieve data on TCP port 80
+
+3) Use the "listen" command to put the listner/server into listen mode.
+	(alternately, "./needle -k <your public key><your private key><the other guy's public key>" works too)
+
+4) From the client, define the IP address of the server with the "connect" command
+	"connect 10.10.10.10"
+
+5) If desired, specifify a send mode.
+
+4) Sync the nonce for both ends witht he "token" command issued from the client
+
+5) explore the following commands (examples provided in parentheses):
+	a) exec (exec ls -al) - executes a command on the listner/server
+	b) put (put /tmp/somefile /bin/ls) - uploads a file
+	c) get (get /etc/passwd /tmp/passwd) - downloads a file
+	d) quit (quit) - ends the session
+
+This program will accept scripted commands from text files. The "-s" option 
+allows users to specify scripts. The following file shows what might work
+for server/listner mode:
+
+---start---
+key public 008abf985b86170a6da351041aaf9f30219867d7485296e6cde6a15ef9573038
+key private 85d78dc2d520119ac35483184a2bb53c62f0aea7d7a73a67788d84ea1abc46df
+key client 71220ccdb6dd55a67c1c53ee01cb04fd11d4599f3ef3230cd5664f6eb720b13f
+send icmp
+receive icmp
+listen
+---stop---
+
+The following script file would configure a client to talk to that host,
+assuming its IP address was 10.0.0.1
+
+---start---
+key public 71220ccdb6dd55a67c1c53ee01cb04fd11d4599f3ef3230cd5664f6eb720b13f
+key private 1162246fced9115a90eb4c9769c5d58a221198010850454077585c7f5525454e
+key client 008abf985b86170a6da351041aaf9f30219867d7485296e6cde6a15ef9573038
+
+connect 10.0.0.1
+send icmp
+receive icmp
+token
+exec ls -al /
+---stop---
+
+
+CHAT USING STEGANOGRAPHY
+
+1) Establish complimentary key pairs on both nodes.
+	key public 008abf985b86170a6da351041aaf9f30219867d7485296e6cde6a15ef9573038
+	key private 85d78dc2d520119ac35483184a2bb53c62f0aea7d7a73a67788d84ea1abc46df
+	key client 71220ccdb6dd55a67c1c53ee01cb04fd11d4599f3ef3230cd5664f6eb720b13f
+2) Type "connect" on both nodes with the single argument being the IP of the other node
+	"connect 10.0.0.1" or "connect 10.0.0.2" assusming, users on these two IPs wish to chat
+3) Type "chat" on both nodes
+	chat
+4) Start Typing messages back and forth
+
+PACKET SPOOFING
+
+Users who wish to hide their source address would be advised to do the following:
+1) First, use the "connect" command to designate the target
+	connect 10.0.0.1
+2) Use the "spoof" command to designate your desired IP address of choice
+	spoof 192.168.1.254
+3) Use the "token" command to tell the server NOT to increment the NONCE
+	(sorry about the chat injection)
+	token static
+
+
+NOTES ON SESSION MANAGEMENT
+
+Assuming that the client and the server have complementary key pars in stalled, they will also need 
+nonces to be the same. Typically, both ends of the communication will simply increment the nonce at
+the same time. However, sometimes this breaks down. If this happens, type the following command
+to sync the nonce:
+
+	token
+
+Sometimes, session management gets a little funny, and the receiver will stop talking to you.
+If this happens, wait for about one minute. This is the timeout value for building a datagram.
+The receiver should reset itself in that time, and then the "token" command should work again.
+
+
+
