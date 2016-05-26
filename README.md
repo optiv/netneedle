@@ -2,11 +2,7 @@
 
 We believe that hiding a needle in a haystack is easier if the needle looks like hay.
 
-NetNeedle is a network steganography tool. It allows users to set up an encrypted control channels or chat with each other in
-a ways that resist detection. By default, both ends will look like they are pinging each other. Examinations of the
-"payload" section will show a data that is identical to a normal ICMP ping. All of the usable data is hidden in the IP
-headers in values that will be random. 
+NetNeedle provides for encrypted control channels and chat sessions that are disguised to look like other common network activity. It does not transmit any usable data in the “payload” sections of any packet, so forensic analysts will only see ICMP ping packets that look identical to ordinary ping or HTTP GET requests. The actual data is encoded in IP headers in fields that typically contain random data.
 
-There is also a "TCP" mode. The communication will look like an HTTP GET request, by default. However, users can configure the software to masquerade as other protocols, if they wish.
+In addition to evasion features, penetration testers can use this tool to maintain control over servers in environments with highly restrictive access lists. Because it subverts expectations surrounding network traffic, NetNeedle allows users to set up back doors that use simple ICMP packets or TCP ports that are already in use. Administrators who believe that they are safe due to “principle of least privilege” access control lists or who believe that ICMP ping is harmless will find themselves sadly mistaken.
 
-The chat client allows two way communication, but it is a control channel, by default.
