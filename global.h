@@ -37,7 +37,6 @@ extern uint16_t tcpport;
 extern struct session *currentsession;
 
 struct session {
-        uint32_t token;
-        uint8_t padding[crypto_box_NONCEBYTES - 4];
+	uint32_t token;
+	uint8_t padding[crypto_box_NONCEBYTES - 4];
 };
-

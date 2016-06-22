@@ -18,24 +18,22 @@ You should have received a copy of the GNU General Public License along with Net
 #include "block.h"
 #include "shell.h"
 
-
 // let the receiver know whether or not we want output returned
-int cmdsilent(char *args) {
-	if(args == NULL) {
-		if(silent) {
+int cmdsilent(char *args)
+{
+	if (args == NULL) {
+		if (silent) {
 			printf("silent mode ON\n");
-		}
-		else {
+		} else {
 			printf("silent mode OFF\n");
 		}
-		return(0);
+		return (0);
 	}
 
-	if(!strcasecmp(args, "on")) {
+	if (!strcasecmp(args, "on")) {
 		silent = 1;
-	}
-	else if(!strcasecmp(args, "off")) {
+	} else if (!strcasecmp(args, "off")) {
 		silent = 0;
 	}
-	return(0);
+	return (0);
 }

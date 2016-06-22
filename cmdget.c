@@ -21,44 +21,45 @@ You should have received a copy of the GNU General Public License along with Net
 
 #define DELIM "\x20\x09"
 
-int makeblock(uint8_t code, uint8_t *data, int len);
+int makeblock(uint8_t code, uint8_t * data, int len);
 int receivedata(int mode);
 void updatenonce();
 
 // download a file
-int cmdget(char *args) {
+int cmdget(char *args)
+{
 	char *source;
 	char *destination;
 
 	// if we don't get any filenames, return
-	if(args == NULL) {
-		return(1);
+	if (args == NULL) {
+		return (1);
 	}
 
-	source = strtok(args, DELIM);		// source file is everything before the whitespace
-	destination = strtok(NULL, DELIM); 	// destination file is whatever they put after the whitespace
+	source = strtok(args, DELIM);	// source file is everything before the whitespace
+	destination = strtok(NULL, DELIM);	// destination file is whatever they put after the whitespace
 
-	if(destination == NULL) {			// if they don't specify a destination figure out where to put the file
+	if (destination == NULL) {	// if they don't specify a destination figure out where to put the file
 		destination = strrchr(source, '/');	// first, try to put the file in the PWD with the same filename
-		if(destination != NULL) {		// we don't want to put the file in the root directory
+		if (destination != NULL) {	// we don't want to put the file in the root directory
 			*destination++;
-		} else {				// if we are using MS Windows, repeat the process
+		} else {	// if we are using MS Windows, repeat the process
 			destination = strrchr(source, '\\');
-			if(destination != NULL) {
+			if (destination != NULL) {
 				*destination++;
 			}
 		}
-		if(destination == NULL) {		// if all else fails, just make them the same
- 			destination = source;
+		if (destination == NULL) {	// if all else fails, just make them the same
+			destination = source;
 		}
 	}
 	getfilename = (char *)malloc(strlen(destination) + 1);
 	memset(getfilename, 0x00, (strlen(destination) + 1));
 	strncpy(getfilename, destination, strlen(destination));
 
-	makeblock(CODEGET, (uint8_t *)source, strlen(source));
+	makeblock(CODEGET, (uint8_t *) source, strlen(source));
 	receivedata(CMDGET);
 
 	updatenonce();
-	return(0);
+	return (0);
 }

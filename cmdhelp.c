@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License along with Net
 #include "shell.h"
 
 // display a help message
-int cmdhelp() {
+int cmdhelp()
+{
 	int i;
 	printf("Command\t\tFunction\n");
-	for(i = 0; cmdtab[i].cmdval != 0; i++) {
+	for (i = 0; cmdtab[i].cmdval != 0; i++) {
 		printf("%s\t\t%s\n", cmdtab[i].cmdstr, cmdtab[i].description);
 	}
-	return(0);
+	return (0);
 }

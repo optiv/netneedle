@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License along with Net
 uint32_t localip;
 uint32_t remoteip;
 uint32_t token;
-uint8_t *key; //delete this later
+uint8_t *key;			//delete this later
 uint8_t *pk_mine;
 uint8_t *sk_mine;
 uint8_t *pk_theirs;
@@ -39,21 +39,21 @@ uint16_t tcpport;
 struct session *currentsession;
 
 const struct cmd cmdtab[] = {
-	{ "quit",	"Quits the program",				CMDQUIT },
-	{ "exit",	"Also quits the program",			CMDQUIT },
-	{ "help",	"Displays this message",			CMDHELP },
-	{ "exec",	"Executes a command on the remote host",	CMDEXEC },
-	{ "connect",	"Define the remote host",			CMDCONNECT },
-	{ "receive",	"Act as a receiver",				CMDRECEIVE },
-	{ "key",	"Set an encryption key",			CMDKEY },
-	{ "token",	"Updates the session token",			CMDTOKEN },
-	{ "silent",	"Toggels commmand output",			CMDSILENT },
-	{ "spoof",	"Designate a fake source address",		CMDSPOOF },
-	{ "get",	"Request a file to download",			CMDGET },
-	{ "put",	"Upolad a file",				CMDPUT },
-	{ "wait",	"Set a wait time between packets",		CMDWAIT },
-	{ "send",	"Choose protocol to transmit data",		CMDSEND },
-	{ "payload",	"Define a fake TCP payload",			CMDPAYLOAD },	
-	{ "chat",	"Send a text message",				CMDCHAT },
-	{ NULL, NULL, 0 }
+	{"quit", "Quits the program", CMDQUIT},
+	{"exit", "Also quits the program", CMDQUIT},
+	{"help", "Displays this message", CMDHELP},
+	{"exec", "Executes a command on the remote host", CMDEXEC},
+	{"connect", "Define the remote host", CMDCONNECT},
+	{"receive", "Act as a receiver", CMDRECEIVE},
+	{"key", "Set an encryption key", CMDKEY},
+	{"token", "Updates the session token", CMDTOKEN},
+	{"silent", "Toggels commmand output", CMDSILENT},
+	{"spoof", "Designate a fake source address", CMDSPOOF},
+	{"get", "Request a file to download", CMDGET},
+	{"put", "Upolad a file", CMDPUT},
+	{"wait", "Set a wait time between packets", CMDWAIT},
+	{"send", "Choose protocol to transmit data", CMDSEND},
+	{"payload", "Define a fake TCP payload", CMDPAYLOAD},
+	{"chat", "Send a text message", CMDCHAT},
+	{NULL, NULL, 0}
 };

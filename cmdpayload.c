@@ -18,35 +18,37 @@ You should have received a copy of the GNU General Public License along with Net
 #include "global.h"
 #include "block.h"
 
-#define BUFSIZE 0x100 
+#define BUFSIZE 0x100
 
-int cmdpayload(char *args) {
+int cmdpayload(char *args)
+{
 	int m;
 	int payloadsize;
 	int numberofblocks;
-	
+
 	//payload = args;
 
-	if((args == NULL) || (strlen(args) == 0)) { // this is what we do if we get no parameters
-		return(0);
+	if ((args == NULL) || (strlen(args) == 0)) {	// this is what we do if we get no parameters
+		return (0);
 	}
 
-	if((payload != (uint8_t *)DEFAULTPAYLOAD) && (payload != NULL)) { // if we are changing the payload, free the old one
+	if ((payload != (uint8_t *) DEFAULTPAYLOAD) && (payload != NULL)) {	// if we are changing the payload, free the old one
 		free(payload);
 	}
-	
-	numberofblocks = ((strlen(args) + 1) / BUFSIZE); // Trying to keep heap boundries in order
+
+	numberofblocks = ((strlen(args) + 1) / BUFSIZE);	// Trying to keep heap boundries in order
 	m = strlen(args) % BUFSIZE;
-	if(m) numberofblocks++;
+	if (m)
+		numberofblocks++;
 	payloadsize = numberofblocks * BUFSIZE;
 
-	payload = malloc(payloadsize);		  //  allocate space for the payload and copy to it
-	if(payload == NULL) {
+	payload = malloc(payloadsize);	//  allocate space for the payload and copy to it
+	if (payload == NULL) {
 		perror("can't allocate memory");
 		exit(1);
 	}
 	memcpy(payload, args, strlen(args));
 	payload[strlen(args)] = 0x00;
 
-	return(0);
+	return (0);
 }

@@ -21,13 +21,15 @@ You should have received a copy of the GNU General Public License along with Net
 
 // what wait time between packets do you want?
 
-int cmdwait(char *args) {
-	if(args == NULL) {
-		printf("sleep interval between packets is %i microseconds\n", waittime);
-	
+int cmdwait(char *args)
+{
+	if (args == NULL) {
+		printf("sleep interval between packets is %i microseconds\n",
+		       waittime);
+
 	} else {
 		waittime = atoi(args);
 	}
 
-	return(0);
+	return (0);
 }

@@ -22,27 +22,27 @@ You should have received a copy of the GNU General Public License along with Net
 
 // how do we send the data? ICMP, TCP or something else?  
 
-int cmdsend(char *args) {
+int cmdsend(char *args)
+{
 	char *portstr;
-	if(args == NULL) {				// display current send mode
-		if(sendmode == IPPROTO_TCP) {
+	if (args == NULL) {	// display current send mode
+		if (sendmode == IPPROTO_TCP) {
 			printf("Transmit mode: TCP port %i\n", tcpport);
 		} else {
 			printf("Transmit mode: ICMP\n");
 		}
-		return(0);
+		return (0);
 	}
-	if(!strncasecmp(args, "TCP", 3)) {
+	if (!strncasecmp(args, "TCP", 3)) {
 		sendmode = IPPROTO_TCP;
-		portstr = strchr(args, 0x20);		// find the substring with the port
-		if(portstr == NULL) {			// if no port is spedified, go with default
-			portstr = "80";	 		// default port == 80
+		portstr = strchr(args, 0x20);	// find the substring with the port
+		if (portstr == NULL) {	// if no port is spedified, go with default
+			portstr = "80";	// default port == 80
 		}
-		tcpport = (uint16_t)strtol(portstr, NULL, 10);
-	}
-	else {
-		sendmode = IPPROTO_ICMP;		// ICMP should be the default
+		tcpport = (uint16_t) strtol(portstr, NULL, 10);
+	} else {
+		sendmode = IPPROTO_ICMP;	// ICMP should be the default
 	}
 
-	return(0);
+	return (0);
 }

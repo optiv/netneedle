@@ -18,28 +18,28 @@ You should have received a copy of the GNU General Public License along with Net
 #include "block.h"
 #include "shell.h"
 
-int makeblock(uint8_t code, uint8_t *data, int len);
+int makeblock(uint8_t code, uint8_t * data, int len);
 int receivedata(int mode);
 void updatenonce();
 
 // supply the remote host with a command for execution
-int cmdexec(char *args) {
+int cmdexec(char *args)
+{
 	uint8_t cmdmode;
 	// if we don't get any commands to execute, return
-	if(args == NULL) {
-		return(1);
+	if (args == NULL) {
+		return (1);
 	}
-	
 	// remember to set the "silent" bit to tell the other end that we don't want output
 	cmdmode = CODEEXEC;
-	if(silent) {
+	if (silent) {
 		cmdmode = cmdmode | 0x80;
 	}
-	makeblock(cmdmode, (uint8_t *)args, strlen(args));
+	makeblock(cmdmode, (uint8_t *) args, strlen(args));
 	//if we aren't in silent mode listen for output
-	if(!silent) {
+	if (!silent) {
 		receivedata(CMDEXEC);
 	}
 	updatenonce();
-	return(0);
+	return (0);
 }

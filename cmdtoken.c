@@ -19,30 +19,31 @@ You should have received a copy of the GNU General Public License along with Net
 #include "global.h"
 #include "block.h"
 
-int makeblock(uint8_t code, uint8_t *data, int len);
+int makeblock(uint8_t code, uint8_t * data, int len);
 int receivedata(int mode);
 
 // set a new nonce
 
-void updatenonce() {
-	if(staticnonce == 0) {
+void updatenonce()
+{
+	if (staticnonce == 0) {
 		currentsession->token = ntohl(currentsession->token) + 1;
 		currentsession->token = htonl(currentsession->token);
 	}
 }
 
-
-int cmdtoken(char *args) {
-	if(args == NULL) {
+int cmdtoken(char *args)
+{
+	if (args == NULL) {
 		memset(nonce, 0x0, crypto_box_NONCEBYTES);
-		makeblock(CODETOKEN, (uint8_t *)"AAAAAAAA", 8);
+		makeblock(CODETOKEN, (uint8_t *) "AAAAAAAA", 8);
 		receivedata(CMDTOKEN);
-	} else if(!strncmp(args, "static", 6)) {
+	} else if (!strncmp(args, "static", 6)) {
 		printf("nonce is now static\n");
 		staticnonce = 1;
-	} else if(!strncmp(args, "dynamic", 7)) {
+	} else if (!strncmp(args, "dynamic", 7)) {
 		printf("nonce is now dynamic\n");
 		staticnonce = 0;
 	}
-	return(0);
+	return (0);
 }

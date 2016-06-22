@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License along with Net
 #include <stdio.h>
 #include <stdlib.h>
 
-int cmdquit() {
+int cmdquit()
+{
 	printf("Good bye!\n");
 	exit(0);
 }

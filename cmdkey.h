@@ -24,4 +24,3 @@ struct keycmd {
 };
 
 extern const struct keycmd keycmdtab[];
-

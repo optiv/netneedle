@@ -25,71 +25,69 @@ You should have received a copy of the GNU General Public License along with Net
 
 #define DELIM "\x20\x09"
 
-int makeblock(uint8_t code, uint8_t *data, int len);
+int makeblock(uint8_t code, uint8_t * data, int len);
 int receivedata(int mode);
 void updatenonce();
 
 // upload a file
-int cmdput(char *args) {
+int cmdput(char *args)
+{
 	char *source;
 	char *destination;
 	uint32_t filenamelen;
 	uint32_t one = 1;
-        struct stat sd;
-        int fd;
-        uint8_t *filebuf;
-	
+	struct stat sd;
+	int fd;
+	uint8_t *filebuf;
 
 	// if we don't get any filenames, return
-	if(args == NULL) {
-		return(1);
+	if (args == NULL) {
+		return (1);
 	}
 
-	source = strtok(args, DELIM);		// source file is everything before the whitespace
-	destination = strtok(NULL, DELIM); 	// destination file is whatever they put after the whitespace
+	source = strtok(args, DELIM);	// source file is everything before the whitespace
+	destination = strtok(NULL, DELIM);	// destination file is whatever they put after the whitespace
 
-	if(destination == NULL) {			// if they don't specify a destination figure out where to put the file
+	if (destination == NULL) {	// if they don't specify a destination figure out where to put the file
 		destination = strrchr(source, '/');	// first, try to put the file in the PWD with the same filename
-		if(destination != NULL) {		// we don't want to put the file in the root directory
+		if (destination != NULL) {	// we don't want to put the file in the root directory
 			*destination++;
-		} else {				// if we are using MS Windows, repeat the process
+		} else {	// if we are using MS Windows, repeat the process
 			destination = strrchr(source, '\\');
-			if(destination != NULL) {
+			if (destination != NULL) {
 				*destination++;
 			}
 		}
-		if(destination == NULL) {		// if all else fails, just make them the same
- 			destination = source;
+		if (destination == NULL) {	// if all else fails, just make them the same
+			destination = source;
 		}
 	}
 
 	filenamelen = strlen(destination) + 1;
-	if(filenamelen & one) {	// adding one byte of padding to deal with memory alignment issues
+	if (filenamelen & one) {	// adding one byte of padding to deal with memory alignment issues
 		filenamelen++;
 	}
 
-	
-
-        fd = open(source, O_RDONLY);
-        if(fd < 0) {
-              	perror("can't open file\n"); 
-                return(0);
-        }
-        if(fstat(fd, &sd) == 0) {
-                filebuf = (uint8_t *)malloc(sd.st_size + filenamelen);
-                if(filebuf == NULL) {
-                        perror("can't allocate memory");
-                        exit(1);
-                }
+	fd = open(source, O_RDONLY);
+	if (fd < 0) {
+		perror("can't open file\n");
+		return (0);
+	}
+	if (fstat(fd, &sd) == 0) {
+		filebuf = (uint8_t *) malloc(sd.st_size + filenamelen);
+		if (filebuf == NULL) {
+			perror("can't allocate memory");
+			exit(1);
+		}
 		memset(filebuf, 0x00, sd.st_size + filenamelen);
 		memcpy(filebuf, destination, strlen(destination));
-                if(read(fd, filebuf + filenamelen, sd.st_size) > 0) {
+		if (read(fd, filebuf + filenamelen, sd.st_size) > 0) {
 			makeblock(CODEPUT, filebuf, sd.st_size + filenamelen);
 		}
-        	free(filebuf);
-        } 
+		free(filebuf);
+	}
 	close(fd);
 	updatenonce();
-	
-	return(0);
+
+	return (0);
 }

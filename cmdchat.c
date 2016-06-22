@@ -15,54 +15,61 @@ You should have received a copy of the GNU General Public License along with Net
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 #include "global.h"
 #include "block.h"
 #include "shell.h"
 
 int cmdreceive(char *args);
-int makeblock(uint8_t code, uint8_t *data, int len);
+int makeblock(uint8_t code, uint8_t * data, int len);
 int receivedata(int mode);
 
-#define INPUTBUFFERSIZE 0xffff 
+#define INPUTBUFFERSIZE 0xffff
 
 // send a text message
-int cmdchat(char *args) {
+int cmdchat(char *args)
+{
 	uint8_t cmdmode;
+	int status;
 	char *inbuf;
 	pid_t procid;
 
-	
 	// remember to set the "silent" bit to tell the other end that we don't want output
 	cmdmode = CODECHAT;
-	if(args != NULL) {
-		if(silent) {
+	if (args != NULL) {
+		if (silent) {
 			cmdmode = cmdmode | 0x80;
 		}
-		makeblock(cmdmode, (uint8_t *)args, strlen(args));
+		makeblock(cmdmode, (uint8_t *) args, strlen(args));
 	} else {
 		inbuf = malloc(INPUTBUFFERSIZE);
-		if(inbuf == NULL) {
+		if (inbuf == NULL) {
 			perror("can't allocate memory");
 			exit(0);
 		}
-		
+
 		procid = fork();
-		if(procid == 0) {
+		if (procid == 0) {
 			cmdreceive(NULL);
 		}
-		for(;;) {
-		printf("CHAT] ");
-		if(fgets(inbuf, INPUTBUFFERSIZE, stdin) > 0) {
-			if(!strncmp(inbuf, "quit", 4)) {
-				return(0);
+		for (;;) {
+			printf("CHAT] ");
+			if (fgets(inbuf, INPUTBUFFERSIZE, stdin) > 0) {
+				if (!strncmp(inbuf, "quit", 4)) {
+					kill(procid, 9);
+					wait(&status);
+					return (0);
+				}
+				makeblock(cmdmode, (uint8_t *) inbuf,
+					  strlen(inbuf));
+
+			} else {
+				return (0);
 			}
-			makeblock(cmdmode, (uint8_t *)inbuf, strlen(inbuf));
-			
-		} else {
-			return(0);
 		}
-			}
 	}
-	
-	return(0);
+
+	return (0);
 }
